@@ -6,8 +6,9 @@ class Game implements GameLoop {
   private lastFrameTime?: number;
   private fpsLimitInMs: number;
 
-  constructor() {
-    this.fpsLimitInMs = this.getMsFromFps(30);
+  constructor(maxFps: number = 30) {
+    // caching the fpsInMs
+    this.fpsLimitInMs = this.getMsFromFps(maxFps);
     this.gameLoop();
   }
 
