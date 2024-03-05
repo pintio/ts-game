@@ -1,12 +1,16 @@
+import RenderEngine from "./view/RenderEngine";
+
 interface GameLoop {
   //   frame: FrameRequestCallback
 }
 
 class Game implements GameLoop {
-  private lastFrameTime?: number;
+  private lastFrameTime!: number;
   private fpsLimitInMs: number;
+  private renderEnginer: RenderEngine;
 
-  constructor(maxFps: number = 30) {
+  constructor(renderEngine: RenderEngine, maxFps: number = 30) {
+    this.renderEnginer = renderEngine;
     // caching the fpsInMs
     this.fpsLimitInMs = this.getMsFromFps(maxFps);
     this.gameLoop();
@@ -21,6 +25,7 @@ class Game implements GameLoop {
       this.lastFrameTime = time;
     }
     if (time - this.lastFrameTime >= this.fpsLimitInMs - 2) {
+      this.renderEnginer.renderCanvas();
       //   console.log("FPS :", 1000 / (time - this.lastFrameTime));
       this.lastFrameTime = time;
     }
