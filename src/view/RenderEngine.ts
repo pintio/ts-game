@@ -1,12 +1,16 @@
 import Platform from "../controllers/Platform";
+import Sprite from "./Sprite";
 
 type RootElement = HTMLDivElement | HTMLElement;
 
 export default class RenderEngine {
   private rootElement: RootElement;
   private canvas!: HTMLCanvasElement;
-  private context!: CanvasRenderingContext2D;
+  private canvasCtx!: CanvasRenderingContext2D;
   private platform!: Platform;
+
+  private sprites?: Sprite[];
+  private spritesLoaded: boolean = false;
 
   constructor(rootElement: RootElement, platform: Platform) {
     this.rootElement = rootElement;
@@ -25,13 +29,48 @@ export default class RenderEngine {
   }
 
   private getContext(): CanvasRenderingContext2D {
-    if (!this.context) {
-      this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+    if (!this.canvasCtx) {
+      this.canvasCtx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     }
-    return this.context;
+    return this.canvasCtx;
   }
 
-  public renderCanvas() {
+  public addSprite(sprite: Sprite) {
+    if (!this.sprites) {
+      this.sprites = [sprite];
+      return;
+    }
+    this.sprites = [...this.sprites, sprite];
+  }
+
+  private loadSprites(start = 0, callback = () => {}) {
+    if (this.spritesLoaded) {
+      callback();
+      return;
+    }
+
+    try {
+      this.sprites?.every((sprite, idx) => {
+        if (idx < start) return true;
+        if (!sprite.loaded) {
+          this.spritesLoaded = false;
+          sprite.onLoad = () => {
+            this.loadSprites(idx, callback);
+          };
+          return false;
+        }
+        if (idx + 1 === this.sprites?.length) {
+          this.spritesLoaded = true;
+          callback();
+        }
+        return true;
+      });
+    } catch (err) {
+      throw new Error("Error while loading sprites");
+    }
+  }
+
+  private _renderCanvas() {
     const { height, width } = this.platform;
     const canvas = this.createCanvas(height, width);
     const ctx = this.getContext();
@@ -42,5 +81,15 @@ export default class RenderEngine {
       canvas.width / 2
     );
     this.rootElement.appendChild(canvas);
+  }
+
+  public renderCanvas() {
+    if (!this.spritesLoaded) {
+      this.loadSprites(0, () => {
+        this._renderCanvas();
+      });
+      return;
+    }
+    this._renderCanvas();
   }
 }

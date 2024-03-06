@@ -7,10 +7,10 @@ interface GameLoop {
 class Game implements GameLoop {
   private lastFrameTime!: number;
   private fpsLimitInMs: number;
-  private renderEnginer: RenderEngine;
+  private renderEngine: RenderEngine;
 
   constructor(renderEngine: RenderEngine, maxFps: number = 30) {
-    this.renderEnginer = renderEngine;
+    this.renderEngine = renderEngine;
     // caching the fpsInMs
     this.fpsLimitInMs = this.getMsFromFps(maxFps);
     this.gameLoop();
@@ -25,7 +25,7 @@ class Game implements GameLoop {
       this.lastFrameTime = time;
     }
     if (time - this.lastFrameTime >= this.fpsLimitInMs - 2) {
-      this.renderEnginer.renderCanvas();
+      this.renderEngine.renderCanvas();
       //   console.log("FPS :", 1000 / (time - this.lastFrameTime));
       this.lastFrameTime = time;
     }
