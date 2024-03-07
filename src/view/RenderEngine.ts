@@ -17,7 +17,7 @@ export default class RenderEngine {
     this.platform = platform;
   }
 
-  private createCanvas(height: number, width: number) {
+  private getCanvas(height: number, width: number) {
     if (this.canvas) {
       return this.canvas;
     }
@@ -25,6 +25,7 @@ export default class RenderEngine {
     canvas.height = height;
     canvas.width = width;
     this.canvas = canvas;
+    this.rootElement.appendChild(canvas);
     return this.canvas;
   }
 
@@ -41,6 +42,18 @@ export default class RenderEngine {
       return;
     }
     this.sprites = [...this.sprites, sprite];
+  }
+
+  public addSprites(sprites: Sprite[]): void {
+    console.log(sprites);
+    sprites[0].onLoad = () => {
+      console.log(sprites);
+    };
+    if (!this.sprites) {
+      this.sprites = sprites;
+      return;
+    }
+    this.sprites = [...this.sprites, ...sprites];
   }
 
   private loadSprites(start = 0, callback = () => {}) {
@@ -70,17 +83,21 @@ export default class RenderEngine {
     }
   }
 
+  // TODO: move sprites - reverse/forward
   private _renderCanvas() {
+    // const sprint = this.sprites?.[0] as Sprite;
     const { height, width } = this.platform;
-    const canvas = this.createCanvas(height, width);
+    const canvas = this.getCanvas(height, width);
     const ctx = this.getContext();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillText(
       new Date().getMilliseconds().toString(),
       canvas.height / 2,
       canvas.width / 2
     );
-    this.rootElement.appendChild(canvas);
+    this.sprites?.forEach((sprite) => sprite.render(ctx));
+    // sprint.render(ctx);
   }
 
   public renderCanvas() {

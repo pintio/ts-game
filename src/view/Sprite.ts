@@ -32,6 +32,17 @@ export default class Sprite {
     spriteImg.src = this.src;
     this._image = spriteImg;
   }
+
+  public render(ctx: CanvasRenderingContext2D) {
+    if (!this._loaded) {
+      this._image.onload = function () {
+        ctx.drawImage(this as HTMLImageElement, 0, 0);
+      };
+      return;
+    }
+    // console.log("IMAGW", ctx);
+    ctx.drawImage(this._image, 0, 0, this._image.width, this._image.height);
+  }
 }
 
 // "images/sprites/bg-layers/Layer_0005_5.png"
