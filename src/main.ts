@@ -29,7 +29,7 @@ const sprites: Sprite[] = bgImgArr.map((bgImg, idx) => {
     // sHeight: 700,
     // sWidth: 800,
   });
-  sprite.velocity = (idx ^ 1.2) / bgImgArr.length;
+  sprite.velocity = ((idx || 1) ^ 1.2) / bgImgArr.length;
   return sprite;
 });
 

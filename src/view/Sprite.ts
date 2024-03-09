@@ -70,7 +70,9 @@ export default class Sprite {
       0,
       this.position.sWidth || this._image.width,
       this.position.sHeight || this._image.height,
-      dw * (iteration - 0.01) + this.offsetPosition.x,
+      dw * iteration -
+        (iteration && Math.round(1.01 ^ (iteration * 1e2)) / 1e2) +
+        this.offsetPosition.x,
       0 - this.offsetPosition.y,
       dw,
       dh
