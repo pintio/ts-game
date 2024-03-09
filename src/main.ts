@@ -20,12 +20,15 @@ const bgImgArr = [
   "a0.png",
 ];
 
+const platform = new Platform(400, 800);
+
 const sprites: Sprite[] = bgImgArr.map((bgImg) => {
-  return new Sprite(
-    bgImgPath + bgImg,
-    window.innerHeight / 2,
-    window.innerWidth / 1.5
-  );
+  return new Sprite(bgImgPath + bgImg, {
+    dWidth: 800,
+    dHeight: 400,
+    // sHeight: 700,
+    // sWidth: 800,
+  });
 });
 
 sprites.forEach((sprite) => {
@@ -41,7 +44,6 @@ sprites.forEach((sprite) => {
 // };
 
 const div = document.getElementById("app") as HTMLElement;
-const platform = new Platform(window.innerHeight / 2, window.innerWidth);
 
 const re = new RenderEngine(div, platform);
 re.addSprites(sprites);
