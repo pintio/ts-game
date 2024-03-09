@@ -22,26 +22,20 @@ const bgImgArr = [
 
 const platform = new Platform(400, 800);
 
-const sprites: Sprite[] = bgImgArr.map((bgImg) => {
-  return new Sprite(bgImgPath + bgImg, {
+const sprites: Sprite[] = bgImgArr.map((bgImg, idx) => {
+  const sprite = new Sprite(bgImgPath + bgImg, {
     dWidth: 800,
     dHeight: 400,
     // sHeight: 700,
     // sWidth: 800,
   });
+  sprite.velocity = (idx ^ 1.2) / bgImgArr.length;
+  return sprite;
 });
 
 sprites.forEach((sprite) => {
   sprite.create();
 });
-
-// bgSprite.onLoad = (ev) => {
-//   console.log("ONLOAD LOGGER", ev);
-//   console.log("bgSprite.loaded after", bgSprite.loaded);
-// };
-// bgSprite.onLoad = () => {
-//   div.appendChild(bgSprite.image);
-// };
 
 const div = document.getElementById("app") as HTMLElement;
 

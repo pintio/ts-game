@@ -96,7 +96,7 @@ export default class RenderEngine {
       canvas.height / 2,
       canvas.width / 2
     );
-    this.sprites?.forEach((sprite) => sprite.render(ctx));
+    this.sprites?.forEach((sprite) => sprite.render(ctx, true));
     // sprint.render(ctx);
   }
 

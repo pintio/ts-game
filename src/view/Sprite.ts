@@ -13,6 +13,7 @@ export default class Sprite {
   private offsetPosition!: { x: number; y: number; iterations: number };
   private src!: string;
   private _loaded = false;
+  private _velocity: number = 0.5; // should be between 0 and 1, 0 means no velocity [still], 1 means maxSpeed
 
   onLoad: ((this: GlobalEventHandlers, ev: Event) => any) | null = null;
 
@@ -35,6 +36,10 @@ export default class Sprite {
 
   public get loaded(): boolean {
     return this._loaded;
+  }
+
+  public set velocity(velocity: number) {
+    this._velocity = velocity;
   }
 
   public create(): void {
@@ -72,7 +77,8 @@ export default class Sprite {
     );
   }
 
-  private forward(by: number = 3) {
+  private forward(by: number = 2) {
+    by = by * this._velocity;
     const disappearConstant = 50;
     const { dw } = this.getDestinationDimension();
     let it = this.offsetPosition.iterations;
@@ -88,7 +94,8 @@ export default class Sprite {
     };
   }
 
-  private reverse(by: number = 1) {
+  private reverse(by: number = 2) {
+    by = by * this._velocity;
     const disappearConstant = 50;
     let it = this.offsetPosition.iterations;
     const { dw } = this.getDestinationDimension();
