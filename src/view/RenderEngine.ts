@@ -1,7 +1,7 @@
 import Platform from "../controllers/Platform";
 import Sprite from "./Sprite";
 
-type RootElement = HTMLDivElement | HTMLElement;
+export type RootElement = HTMLDivElement | HTMLElement;
 
 export default class RenderEngine {
   private rootElement: RootElement;
@@ -83,21 +83,17 @@ export default class RenderEngine {
     }
   }
 
-  // TODO: move sprites - reverse/forward
   private _renderCanvas() {
-    // const sprint = this.sprites?.[0] as Sprite;
     const { height, width } = this.platform;
     const canvas = this.getCanvas(height, width);
     const ctx = this.getContext();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillText(
       new Date().getMilliseconds().toString(),
       canvas.height / 2,
       canvas.width / 2
     );
-    this.sprites?.forEach((sprite) => sprite.render(ctx, true));
-    // sprint.render(ctx);
+    this.sprites?.forEach((sprite) => sprite.moveBackward(ctx));
   }
 
   public renderCanvas() {

@@ -111,7 +111,7 @@ export default class Sprite {
     };
   }
 
-  public render(ctx: CanvasRenderingContext2D, reverse: boolean = false) {
+  private render(ctx: CanvasRenderingContext2D, reverse: boolean = false) {
     const { iterations } = this.offsetPosition;
     if (!this._loaded) {
       this._image.onload = () => {
@@ -130,6 +130,12 @@ export default class Sprite {
       this.forward();
     }
   }
-}
 
-// "images/sprites/bg-layers/Layer_0005_5.png"
+  public moveForward(ctx: CanvasRenderingContext2D) {
+    this.render(ctx);
+  }
+
+  public moveBackward(ctx: CanvasRenderingContext2D) {
+    this.render(ctx, true);
+  }
+}
