@@ -45,10 +45,7 @@ export default class RenderEngine {
   }
 
   public addSprites(sprites: Sprite[]): void {
-    console.log(sprites);
-    sprites[0].onLoad = () => {
-      console.log(sprites);
-    };
+    sprites[0].onLoad = () => {};
     if (!this.sprites) {
       this.sprites = sprites;
       return;
@@ -93,7 +90,7 @@ export default class RenderEngine {
       canvas.height / 2,
       canvas.width / 2
     );
-    this.sprites?.forEach((sprite) => sprite.moveBackward(ctx));
+    this.sprites?.forEach((sprite) => sprite.render(ctx));
   }
 
   public renderCanvas() {

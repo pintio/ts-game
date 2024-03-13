@@ -5,6 +5,8 @@ interface SpritePosition {
   dWidth?: number;
 }
 
+type MoveDirection = "still" | "left" | "right";
+
 export default class Sprite {
   private _image!: HTMLImageElement;
   // private height!: number;
@@ -14,6 +16,8 @@ export default class Sprite {
   private src!: string;
   private _loaded = false;
   private _velocity: number = 0.5; // should be between 0 and 1, 0 means no velocity [still], 1 means maxSpeed
+
+  public moveDirection: MoveDirection = "still";
 
   onLoad: ((this: GlobalEventHandlers, ev: Event) => any) | null = null;
 
@@ -111,7 +115,7 @@ export default class Sprite {
     };
   }
 
-  private render(ctx: CanvasRenderingContext2D, reverse: boolean = false) {
+  public render(ctx: CanvasRenderingContext2D, reverse: boolean = false) {
     const { iterations } = this.offsetPosition;
     if (!this._loaded) {
       this._image.onload = () => {
@@ -124,18 +128,29 @@ export default class Sprite {
     this.draw(ctx, 1 + iterations);
     this.draw(ctx, 0 + iterations);
     this.draw(ctx, -1 + iterations);
-    if (reverse) {
-      this.reverse();
-    } else {
+    // if (reverse) {
+    //   this.reverse();
+    // } else {
+    //   this.forward();
+    // }
+  }
+
+  public move() {
+    if (this.moveDirection === "right") {
       this.forward();
+      return;
     }
+    if (this.moveDirection === "left") {
+      this.reverse();
+    }
+    return;
   }
 
-  public moveForward(ctx: CanvasRenderingContext2D) {
-    this.render(ctx);
-  }
+  // private moveForward(ctx: CanvasRenderingContext2D) {
+  //   this.render(ctx);
+  // }
 
-  public moveBackward(ctx: CanvasRenderingContext2D) {
-    this.render(ctx, true);
-  }
+  // private moveBackward(ctx: CanvasRenderingContext2D) {
+  //   this.render(ctx, true);
+  // }
 }
