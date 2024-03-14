@@ -52,10 +52,19 @@ keyboardController.on("forward", () => {
     }
   });
 });
+
+keyboardController.on("reverse", () => {
+  spriteManager.forEach((sprite, name) => {
+    if (name.includes("bg")) {
+      sprite.moveDirection = "right";
+      sprite.move();
+    }
+  });
+});
 // });
 
 const div = document.getElementById("app") as HTMLElement;
 
 const re = new RenderEngine(div, platform);
-re.addSprites(sprites);
+re.spriteManager = spriteManager;
 new Game(re);

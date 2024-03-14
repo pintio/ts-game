@@ -4,6 +4,8 @@ type SpriteMap = Map<string, Sprite>;
 
 export default class SpriteManager {
   private sprites: SpriteMap;
+  private spritesLoaded = false;
+
   constructor(sprites?: SpriteMap | [string, Sprite][]) {
     if (sprites) {
       this.sprites = new Map([...sprites]);
@@ -40,5 +42,30 @@ export default class SpriteManager {
 
   public forEach(callback: (sprite: Sprite, name: string) => void) {
     this.sprites.forEach((sprite, name) => callback(sprite, name));
+  }
+
+  public loadSprites(callback: () => void) {
+    if (this.spritesLoaded) {
+      callback();
+      return;
+    }
+
+    let idx = 0;
+    for (let [_, sprite] of this.sprites) {
+      idx++;
+      if (sprite.loaded) {
+        console.log("55555555555555 ", sprite);
+        if (idx === this.sprites.size) {
+          this.spritesLoaded = true;
+          callback();
+          return;
+        }
+        continue;
+      }
+      sprite.onLoad = () => {
+        this.loadSprites(callback);
+      };
+      break;
+    }
   }
 }

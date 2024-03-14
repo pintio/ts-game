@@ -1,5 +1,5 @@
 import Platform from "../controllers/Platform";
-import Sprite from "./Sprite";
+import SpriteManager from "./SpriteManager";
 
 export type RootElement = HTMLDivElement | HTMLElement;
 
@@ -9,7 +9,7 @@ export default class RenderEngine {
   private canvasCtx!: CanvasRenderingContext2D;
   private platform!: Platform;
 
-  private sprites?: Sprite[];
+  public spriteManager?: SpriteManager;
   private spritesLoaded: boolean = false;
 
   constructor(rootElement: RootElement, platform: Platform) {
@@ -36,50 +36,6 @@ export default class RenderEngine {
     return this.canvasCtx;
   }
 
-  public addSprite(sprite: Sprite) {
-    if (!this.sprites) {
-      this.sprites = [sprite];
-      return;
-    }
-    this.sprites = [...this.sprites, sprite];
-  }
-
-  public addSprites(sprites: Sprite[]): void {
-    sprites[0].onLoad = () => {};
-    if (!this.sprites) {
-      this.sprites = sprites;
-      return;
-    }
-    this.sprites = [...this.sprites, ...sprites];
-  }
-
-  private loadSprites(start = 0, callback = () => {}) {
-    if (this.spritesLoaded) {
-      callback();
-      return;
-    }
-
-    try {
-      this.sprites?.every((sprite, idx) => {
-        if (idx < start) return true;
-        if (!sprite.loaded) {
-          this.spritesLoaded = false;
-          sprite.onLoad = () => {
-            this.loadSprites(idx, callback);
-          };
-          return false;
-        }
-        if (idx + 1 === this.sprites?.length) {
-          this.spritesLoaded = true;
-          callback();
-        }
-        return true;
-      });
-    } catch (err) {
-      throw new Error("Error while loading sprites");
-    }
-  }
-
   private _renderCanvas() {
     const { height, width } = this.platform;
     const canvas = this.getCanvas(height, width);
@@ -90,12 +46,12 @@ export default class RenderEngine {
       canvas.height / 2,
       canvas.width / 2
     );
-    this.sprites?.forEach((sprite) => sprite.render(ctx));
+    this.spriteManager?.forEach((sprite) => sprite.render(ctx));
   }
 
   public renderCanvas() {
     if (!this.spritesLoaded) {
-      this.loadSprites(0, () => {
+      this.spriteManager?.loadSprites(() => {
         this._renderCanvas();
       });
       return;

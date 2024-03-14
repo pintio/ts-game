@@ -115,7 +115,7 @@ export default class Sprite {
     };
   }
 
-  public render(ctx: CanvasRenderingContext2D, reverse: boolean = false) {
+  public render(ctx: CanvasRenderingContext2D) {
     const { iterations } = this.offsetPosition;
     if (!this._loaded) {
       this._image.onload = () => {
@@ -128,11 +128,6 @@ export default class Sprite {
     this.draw(ctx, 1 + iterations);
     this.draw(ctx, 0 + iterations);
     this.draw(ctx, -1 + iterations);
-    // if (reverse) {
-    //   this.reverse();
-    // } else {
-    //   this.forward();
-    // }
   }
 
   public move() {
@@ -145,12 +140,4 @@ export default class Sprite {
     }
     return;
   }
-
-  // private moveForward(ctx: CanvasRenderingContext2D) {
-  //   this.render(ctx);
-  // }
-
-  // private moveBackward(ctx: CanvasRenderingContext2D) {
-  //   this.render(ctx, true);
-  // }
 }
